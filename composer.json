@@ -1,0 +1,18 @@
+{
+    "minimum-stability": "dev",
+    "require": {
+        "php":             ">=5.4",
+        "symfony/console": "2.1.x-dev"
+    },
+    "require-dev": {
+        "phpspec/phpspec2": "*"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src"
+        }
+    }
+}
