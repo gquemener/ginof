@@ -8,10 +8,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 use GildasQ\Github\NotificationFetcher;
-use GildasQ\Github\NotificationPersister;
+use GildasQ\Persistence\PersisterInterface;
 
 class UpdateNotificationCommand extends Command
 {
+    private $persister;
+    private $fetcher;
+
+    public function __construct(PersisterInterface $persister, NotificationFetcher $fetcher)
+    {
+        $this->persister = $persister;
+        $this->fetcher   = $fetcher;
+    }
+
     protected function configure()
     {
         $this
@@ -23,14 +32,9 @@ class UpdateNotificationCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiToken = $input->getArgument('api_token');
-        $fetcher = new NotificationFetcher;
-        $notifications = $fetcher->fetch($apiToken);
+        $apiToken      = $input->getArgument('api_token');
+        $notifications = $this->fetcher->fetch($apiToken);
 
-        // Write notifications to a file
-        $persister = new NotificationPersister;
-        $persister->persist($notifications);
-
-        // notify-send
+        $this->persister->save(count($notifications));
     }
 }

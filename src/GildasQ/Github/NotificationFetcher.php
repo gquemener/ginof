@@ -12,12 +12,20 @@ class NotificationFetcher
     private $client;
     private $requestFactory;
     private $responseFactory;
+    private $notificationFactory;
+    private $lastModifiedFilePath = '/tmp/github-last-modified-notification';
 
-    public function __construct(ClientInterface $client = null, RequestFactory $requestFactory = null, ResponseFactory $responseFactory = null)
+    public function __construct(
+        ClientInterface $client = null,
+        RequestFactory $requestFactory = null,
+        ResponseFactory $responseFactory = null,
+        NotificationFactory $notificationFactory = null
+    )
     {
-        $this->client          = $client?: new Curl;
-        $this->requestFactory  = $requestFactory?: new RequestFactory;
-        $this->responseFactory = $responseFactory?: new ResponseFactory;
+        $this->client              = $client?: new Curl;
+        $this->requestFactory      = $requestFactory?: new RequestFactory;
+        $this->responseFactory     = $responseFactory?: new ResponseFactory;
+        $this->notificationFactory = $notificationFactory?: new NotificationFactory;
     }
 
     public function fetch($apiToken = null)
@@ -33,7 +41,9 @@ class NotificationFetcher
         if ($response->isOk()) {
             $this->setLastModified($response->getHeader('Date'));
 
-            return json_decode($response->getContent(), true);
+            if ($data = json_decode($response->getContent(), true)) {
+                return $this->notificationFactory->createNotifications($data);
+            }
         }
 
         return;
@@ -41,8 +51,8 @@ class NotificationFetcher
 
     private function getLastModified()
     {
-        if (is_file('/tmp/github-notification')) {
-            return file_get_contents('/tmp/github-notification');
+        if (is_file($this->lastModifiedFilePath)) {
+            return file_get_contents($this->lastModifiedFilePath);
         }
 
         return null;
@@ -50,6 +60,6 @@ class NotificationFetcher
 
     private function setLastModified($lastModified)
     {
-        return file_put_contents('/tmp/github-notification', $lastModified);
+        return file_put_contents($this->lastModifiedFilePath, $lastModified);
     }
 }
