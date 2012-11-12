@@ -12,6 +12,7 @@ class NotificationFactory
             $notifications[] = $notification;
         }
 
+        return $notifications;
     }
 
     private function createNotification(array $data = [])

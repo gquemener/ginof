@@ -6,7 +6,12 @@ class FileSystemPersister implements PersisterInterface
 {
     private $path;
 
-    public function __construct($path)
+    public function __construct($path = null)
+    {
+        $this->path = $path;
+    }
+
+    public function setPath($path)
     {
         $this->path = $path;
     }

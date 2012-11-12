@@ -19,6 +19,8 @@ class UpdateNotificationCommand extends Command
     {
         $this->persister = $persister;
         $this->fetcher   = $fetcher;
+
+        parent::__construct();
     }
 
     protected function configure()
@@ -26,14 +28,17 @@ class UpdateNotificationCommand extends Command
         $this
             ->setName('fetch')
             ->setDescription('Try to fetch new notification from Github')
-            ->addArgument('api_token', InputArgument::REQUIRED, 'Your Github API access token')
+            ->addArgument('api-token', InputArgument::REQUIRED, 'Your Github API access token')
+            ->addArgument('persist-at', InputArgument::OPTIONAL, 'Path to save number of notifications')
         ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiToken      = $input->getArgument('api_token');
+        $apiToken      = $input->getArgument('api-token');
         $notifications = $this->fetcher->fetch($apiToken);
+
+        $this->persister->setPath($input->getArgument('persist-at'));
 
         $this->persister->save(count($notifications));
     }

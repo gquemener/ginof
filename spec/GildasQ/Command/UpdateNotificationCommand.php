@@ -29,10 +29,11 @@ class UpdateNotificationCommand extends ObjectBehavior
      */
     function it_should_fetch_and_persist_github_notifications($input, $output, $notif1, $notif2, $fetcher, $persister, $factory)
     {
-        $input->getArgument('api_token')->shouldBeCalled()->willReturn('1234');
+        $input->getArgument('api-token')->shouldBeCalled()->willReturn('1234');
+        $input->getArgument('persist-at')->shouldBeCalled()->willReturn('some file');
         $notifications = [$notif1, $notif2];
         $fetcher->fetch('1234')->shouldBeCalled()->willReturn($notifications);
-        $persiter->save(2)->shouldBeCalled();
+        $persister->save(2)->shouldBeCalled();
 
 
         $this->execute($input, $output);
