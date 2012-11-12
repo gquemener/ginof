@@ -27,14 +27,14 @@ class UpdateNotificationCommand extends ObjectBehavior
      * @param StdClass $notif1
      * @param StdClass $notif2
      */
-    function it_should_fetch_and_persist_github_notifications($input, $output, $notif1, $notif2, $fetcher, $persister, $factory)
+    function it_should_fetch_github_notifications($input, $output, $notif1, $notif2, $fetcher, $persister, $factory)
     {
         $input->getArgument('api-token')->shouldBeCalled()->willReturn('1234');
         $input->getArgument('persist-at')->shouldBeCalled()->willReturn('some file');
+        $input->getArgument('repository')->shouldBeCalled()->willReturn('some repo');
         $notifications = [$notif1, $notif2];
         $fetcher->fetch('1234')->shouldBeCalled()->willReturn($notifications);
-        $persister->save(serialize($notifications))->shouldBeCalled();
 
-        $this->execute($input, $output)->shouldReturn("2");
+        $this->execute($input, $output);
     }
 }
