@@ -11,6 +11,11 @@ class FileSystemPersister implements PersisterInterface
         $this->path = $path;
     }
 
+    public function getPath()
+    {
+        return $this->path;
+    }
+
     public function setPath($path)
     {
         $this->path = $path;
@@ -18,10 +23,19 @@ class FileSystemPersister implements PersisterInterface
 
     public function save($data)
     {
-        if (!$this->path) {
+        if (!$this->getPath()) {
             throw new \RuntimeException('You haven\'t defined any path to save your data.');
         }
 
-        return file_put_contents($this->path, $data);
+        return file_put_contents($this->getPath(), serialize($data));
+    }
+
+    public function retrieve()
+    {
+        if (file_exists($this->getPath())) {
+            return unserialize(file_get_contents($this->getPath()));
+        }
+
+        return [];
     }
 }

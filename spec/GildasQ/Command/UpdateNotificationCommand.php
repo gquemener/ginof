@@ -33,9 +33,8 @@ class UpdateNotificationCommand extends ObjectBehavior
         $input->getArgument('persist-at')->shouldBeCalled()->willReturn('some file');
         $notifications = [$notif1, $notif2];
         $fetcher->fetch('1234')->shouldBeCalled()->willReturn($notifications);
-        $persister->save(2)->shouldBeCalled();
+        $persister->save(serialize($notifications))->shouldBeCalled();
 
-
-        $this->execute($input, $output);
+        $this->execute($input, $output)->shouldReturn("2");
     }
 }

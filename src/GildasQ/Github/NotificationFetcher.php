@@ -6,6 +6,8 @@ use Buzz\Client\Curl;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
 use Buzz\Client\ClientInterface;
+use GildasQ\Persistence\FileSystemPersister;
+use GildasQ\Persistence\PersisterInterface;
 
 class NotificationFetcher
 {
@@ -19,19 +21,26 @@ class NotificationFetcher
         ClientInterface $client = null,
         RequestFactory $requestFactory = null,
         ResponseFactory $responseFactory = null,
-        NotificationFactory $notificationFactory = null
+        NotificationFactory $notificationFactory = null,
+        PersisterInterface $persister = null
     )
     {
         $this->client              = $client?: new Curl;
         $this->requestFactory      = $requestFactory?: new RequestFactory;
         $this->responseFactory     = $responseFactory?: new ResponseFactory;
         $this->notificationFactory = $notificationFactory?: new NotificationFactory;
+        $this->persister           = $persister?: new FileSystemPersister;
+    }
+
+    public function setPersister(PersisterInterface $persister)
+    {
+        $this->persister = $persister;
     }
 
     public function fetch($apiToken = null)
     {
         if (!$apiToken) {
-            throw new \RuntimeException('Please provide a valid api token. See http://developer.github.com/v3/activity/notifications/');
+            throw new \RuntimeException('Please provide a valid api token. See http://developer.github.com/v3/oauth');
         }
 
         $request  = $this->requestFactory->createRequest($apiToken, $this->getLastModified());
@@ -42,11 +51,16 @@ class NotificationFetcher
             $this->setLastModified($response->getHeader('Date'));
 
             if ($data = json_decode($response->getContent(), true)) {
-                return $this->notificationFactory->createNotifications($data);
+                $notifications = $this->notificationFactory->createNotifications($data);
+                $this->persister->save($notifications);
+
+                return $notifications;
+            } else {
+                throw new \RuntimeException('Error while parsing json response.');
             }
         }
 
-        return;
+        return $this->persister->retrieve();
     }
 
     private function getLastModified()
