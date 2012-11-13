@@ -39,8 +39,27 @@ class Notification
 
     public function setSubjectUrl($subjectUrl)
     {
-        $this->subjectUrl = $subjectUrl;
+        $this->subjectUrl = str_replace(
+            'https://api.github.com/repos',
+            'https://www.github.com',
+            $subjectUrl
+        );
 
         return $this;
+    }
+
+    public function getBody()
+    {
+        return sprintf(
+            '[%s] %s' . PHP_EOL .' %s',
+            $this->getRepositoryFullName(),
+            $this->getSubjectTitle(),
+            $this->getSubjectUrl()
+        );
+    }
+
+    public function __toString()
+    {
+        return $this->getBody();
     }
 }

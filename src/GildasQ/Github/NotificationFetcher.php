@@ -50,7 +50,7 @@ class NotificationFetcher
         if ($response->isOk()) {
             $this->setLastModified($response->getHeader('Date'));
 
-            if ($data = json_decode($response->getContent(), true)) {
+            if (null !== $data = json_decode($response->getContent(), true)) {
                 $notifications = $this->notificationFactory->createNotifications($data);
                 $this->persister->save($notifications);
 
