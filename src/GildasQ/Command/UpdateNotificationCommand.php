@@ -79,7 +79,7 @@ class UpdateNotificationCommand extends Command
         if (count($notifications)) {
             $body = '';
             foreach ($notifications as $notification) {
-                $body .= (string) $notification . PHP_EOL;
+                $body .= $notification->getBody() . PHP_EOL;
             }
             $this->notifier->notify(
                 'github-notification-fetcher',

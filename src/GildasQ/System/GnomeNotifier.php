@@ -2,6 +2,9 @@
 
 namespace GildasQ\System;
 
+/**
+ * Notifier implementation using gnome notify api
+ */
 class GnomeNotifier implements NotifierInterface
 {
     public function __construct(\Dbus $dbus = null)
@@ -29,7 +32,7 @@ class GnomeNotifier implements NotifierInterface
                 array(
                 )
             ),
-            5000
+            1000
         );
     }
 }
