@@ -16,6 +16,7 @@ if (is_dir($vendor = __DIR__ . '/../vendor')) {
 $app       = new Symfony\Component\Console\Application();
 $persister = new GildasQ\Persistence\FileSystemPersister();
 $fetcher   = new GildasQ\Github\NotificationFetcher();
+$notifier  = new GildasQ\System\GnomeNotifier();
 
-$app->add(new GildasQ\Command\UpdateNotificationCommand($persister, $fetcher));
+$app->add(new GildasQ\Command\UpdateNotificationCommand($persister, $fetcher, $notifier));
 $app->run();

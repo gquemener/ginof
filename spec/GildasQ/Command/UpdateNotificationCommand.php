@@ -9,11 +9,26 @@ class UpdateNotificationCommand extends ObjectBehavior
     /**
      * @param GildasQ\Persistence\PersisterInterface $persister
      * @param GildasQ\Github\NotificationFetcher $fetcher
-     * @param GildasQ\Github\NotificationFactory $factory
+     * @param GildasQ\System\NotifierInterface $notifier
+     * @param Symfony\Component\Console\Input\InputInterface $input
+     * @param Symfony\Component\Console\Output\OutputInterface $output
+     * @param StdClass $notification1
+     * @param StdClass $notification2
+     * @param StdClass $notification3
      */
-    function let($persister, $fetcher, $factory)
+    function let($persister, $fetcher, $notifier, $input, $output, $notification1, $notification2, $notification3, $fetcher)
     {
-        $this->beConstructedWith($persister, $fetcher, $factory);
+        $this->beConstructedWith($persister, $fetcher, $notifier);
+
+        $input->getArgument('api-token')->willReturn('1234');
+        $input->getArgument('persist-at')->willReturn('some file');
+        $input->getArgument('repository')->willReturn('some repo');
+
+        $notification1->getRepositoryFullName()->willReturn('some repo');
+        $notification2->getRepositoryFullName()->willReturn('some other repo');
+        $notification3->getRepositoryFullName()->willReturn('some repo');
+
+        $fetcher->fetch(ANY_ARGUMENT)->willReturn([$notification1, $notification2, $notification3]);
     }
 
     function it_should_be_initializable()
@@ -22,18 +37,20 @@ class UpdateNotificationCommand extends ObjectBehavior
     }
 
     /**
-     * @param Symfony\Component\Console\Input\InputInterface $input
-     * @param Symfony\Component\Console\Output\OutputInterface $output
-     * @param StdClass $notif1
-     * @param StdClass $notif2
      */
-    function it_should_fetch_github_notifications($input, $output, $notif1, $notif2, $fetcher, $persister, $factory)
+    function it_should_display_number_of_notifications_in_the_given_repository_among_all_notifications($input, $output)
     {
-        $input->getArgument('api-token')->shouldBeCalled()->willReturn('1234');
-        $input->getArgument('persist-at')->shouldBeCalled()->willReturn('some file');
-        $input->getArgument('repository')->shouldBeCalled()->willReturn('some repo');
-        $notifications = [$notif1, $notif2];
-        $fetcher->fetch('1234')->shouldBeCalled()->willReturn($notifications);
+        // $output->wrintln("0/3")->shouldBeCalled();
+
+        $this->execute($input, $output);
+    }
+
+    function it_should_use_system_notifier_to_displayer_result_of_fetching($input, $output, $notifier)
+    {
+        $notifier->notify(
+            'github-notification-fetcher',
+            'Github: You have 3 new notifications'
+        )->shouldBeCalled();
 
         $this->execute($input, $output);
     }

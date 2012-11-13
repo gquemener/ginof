@@ -1,5 +1,5 @@
 {
-    "hash": "c8e4269e227195e07812885e880e5614",
+    "hash": "11c22d35617852d2a0fce9e6c9f36379",
     "packages": [
         {
             "name": "kriswallsmith/buzz",
@@ -21,7 +21,6 @@
             "suggest": {
                 "ext-curl": "*"
             },
-            "time": "1345206213",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -44,7 +43,8 @@
             "keywords": [
                 "curl",
                 "http client"
-            ]
+            ],
+            "time": "1345206213"
         },
         {
             "name": "symfony/console",
@@ -162,7 +162,6 @@
                 "reference": "8d82ac415225fac373a4073ba14b1fe286aa2312",
                 "shasum": ""
             },
-            "time": "1352364945",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -179,7 +178,8 @@
                     "homepage": "http://github.com/chrisboulton"
                 }
             ],
-            "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays)."
+            "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
+            "time": "1352364945"
         },
         {
             "name": "phpspec/phpspec2",
@@ -203,7 +203,6 @@
                 "symfony/finder": ">=2.1.0,<2.2.0",
                 "phpspec/php-diff": "*@dev"
             },
-            "time": "1351698370",
             "bin": [
                 "bin/phpspec"
             ],
@@ -236,7 +235,8 @@
                 "spec",
                 "SpecBDD",
                 "specification"
-            ]
+            ],
+            "time": "1351698370"
         },
         {
             "name": "symfony/event-dispatcher",
