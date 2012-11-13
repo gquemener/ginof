@@ -8,7 +8,7 @@ class NotificationFactory extends ObjectBehavior
 {
     function it_should_create_notifications_from_an_array()
     {
-        $notifications = json_decode(file_get_contents('./notifications.json'), true);
+        $notifications = json_decode(file_get_contents(__DIR__ . '/notifications.json'), true);
 
         $notifications = $this->createNotifications($notifications);
     }
