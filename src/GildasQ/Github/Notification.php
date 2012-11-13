@@ -43,4 +43,13 @@ class Notification
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return sprintf(
+            '[%s] %s',
+            $this->getRepositoryFullName(),
+            $this->getSubjectTitle()
+        );
+    }
 }

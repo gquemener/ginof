@@ -77,7 +77,15 @@ class UpdateNotificationCommand extends Command
         $output->writeln(sprintf('%d/%d', count($repoNotif), count($notifications)));
 
         if (count($notifications)) {
-            $this->notifier->notify('github-notification-fetcher', sprintf('Github: You have %d new notifications', count($notifications)));
+            $body = '';
+            foreach ($notifications as $notification) {
+                $body .= (string) $notification . PHP_EOL;
+            }
+            $this->notifier->notify(
+                'github-notification-fetcher',
+                sprintf('Github: You have %d new notifications', count($notifications)),
+                $body
+            );
         }
     }
 }
