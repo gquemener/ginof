@@ -8,8 +8,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 use GildasQ\Github\NotificationFetcher;
+use GildasQ\Github\Router;
 use GildasQ\Persistence\PersisterInterface;
+use GildasQ\Persistence\FileSystemPersister;
 use GildasQ\System\NotifierInterface;
+use GildasQ\System\GnomeNotifier;
 
 /**
  * Provide command to fetch and display notification
@@ -24,12 +27,19 @@ class UpdateNotificationCommand extends Command
      * @param PersisterInterface  $persister The engine to persist notifications
      * @param NotificationFetcher $fetcher   The notification fetcher
      * @param NotifierInterface   $notifier  The system notifier
+     * @param Router              $router    The Github router
      */
-    public function __construct(PersisterInterface $persister, NotificationFetcher $fetcher, NotifierInterface $notifier)
+    public function __construct(
+        PersisterInterface $persister = null,
+        NotificationFetcher $fetcher = null,
+        NotifierInterface $notifier = null,
+        Router $router = null
+    )
     {
-        $this->persister = $persister;
-        $this->fetcher   = $fetcher;
-        $this->notifier  = $notifier;
+        $this->persister = $persister ?: new FileSystemPersister;
+        $this->fetcher   = $fetcher   ?: new NotificationFetcher;
+        $this->notifier  = $notifier  ?: new GnomeNotifier;
+        $this->router    = $router    ?: new Router;
 
         parent::__construct();
     }
@@ -80,6 +90,10 @@ class UpdateNotificationCommand extends Command
             $body = '';
             foreach ($notifications as $notification) {
                 $body .= $notification->getBody() . PHP_EOL;
+                $body .= $this->router->generateUrl(
+                    $notification->getSubjectUrl(),
+                    $notification->getSubjectType()
+                ) . PHP_EOL;
             }
             $this->notifier->notify(
                 'github-notification-fetcher',

@@ -7,6 +7,7 @@ class Notification
     private $repositoryFullName;
     private $subjectTitle;
     private $subjectUrl;
+    private $subjectType;
 
     public function getRepositoryFullName()
     {
@@ -39,22 +40,27 @@ class Notification
 
     public function setSubjectUrl($subjectUrl)
     {
-        $this->subjectUrl = str_replace(
-            'https://api.github.com/repos',
-            'https://www.github.com',
-            $subjectUrl
-        );
+        $this->subjectUrl = $subjectUrl;
 
         return $this;
+    }
+
+    public function getSubjectType()
+    {
+        return $this->subjectType;
+    }
+
+    public function setSubjectType($subjectType)
+    {
+        $this->subjectType = $subjectType;
     }
 
     public function getBody()
     {
         return sprintf(
-            '[%s] %s' . PHP_EOL .' %s',
+            '[%s] %s',
             $this->getRepositoryFullName(),
-            $this->getSubjectTitle(),
-            $this->getSubjectUrl()
+            $this->getSubjectTitle()
         );
     }
 
