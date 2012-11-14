@@ -22,6 +22,7 @@ class NotificationFactory
             ->setRepositoryFullName($data['repository']['full_name'])
             ->setSubjectTitle($data['subject']['title'])
             ->setSubjectUrl($data['subject']['url'])
+            ->setSubjectType($data['subject']['type'])
         ;
 
         return $notification;

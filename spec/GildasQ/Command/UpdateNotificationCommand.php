@@ -10,15 +10,16 @@ class UpdateNotificationCommand extends ObjectBehavior
      * @param GildasQ\Persistence\PersisterInterface           $persister
      * @param GildasQ\Github\NotificationFetcher               $fetcher
      * @param GildasQ\System\NotifierInterface                 $notifier
+     * @param GildasQ\Github\Router                            $router
      * @param Symfony\Component\Console\Input\InputInterface   $input
      * @param Symfony\Component\Console\Output\OutputInterface $output
      * @param GildasQ\Github\Notification                      $notification1
      * @param GildasQ\Github\Notification                      $notification2
      * @param GildasQ\Github\Notification                      $notification3
      */
-    function let($persister, $fetcher, $notifier, $input, $output, $notification1, $notification2, $notification3)
+    function let($persister, $fetcher, $notifier, $router, $input, $output, $notification1, $notification2, $notification3)
     {
-        $this->beConstructedWith($persister, $fetcher, $notifier);
+        $this->beConstructedWith($persister, $fetcher, $notifier, $router);
 
         $input->getArgument('api-token')->willReturn('1234');
         $input->getArgument('persist-at')->willReturn('some file');
@@ -31,6 +32,8 @@ class UpdateNotificationCommand extends ObjectBehavior
         $notification1->getBody()->willReturn('subject');
         $notification2->getBody()->willReturn('subject');
         $notification3->getBody()->willReturn('subject');
+
+        $router->generateUrl(ANY_ARGUMENTS)->willReturn('github url');
 
         $fetcher->fetch(ANY_ARGUMENT)->willReturn([$notification1, $notification2, $notification3]);
     }
@@ -52,7 +55,9 @@ class UpdateNotificationCommand extends ObjectBehavior
         $notifier->notify(
             'github-notification-fetcher',
             'Github: You have 3 new notifications',
-            'subject' . PHP_EOL . 'subject' . PHP_EOL . 'subject' . PHP_EOL
+            'subject' . PHP_EOL . 'github url' . PHP_EOL .
+            'subject' . PHP_EOL . 'github url' . PHP_EOL .
+            'subject' . PHP_EOL . 'github url' . PHP_EOL
         )->shouldBeCalled();
 
         $this->execute($input, $output);
