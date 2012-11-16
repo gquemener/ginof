@@ -47,7 +47,7 @@ class NotificationFetcher
         $this->client->send($request, $response);
 
         if ($this->isNotModified($response)) {
-            return $this->persister->retrieve();
+            return null;
         }
 
         if (null !== $data = json_decode($response->getContent(), true)) {

@@ -80,11 +80,9 @@ class UpdateNotificationCommand extends Command
 
         $notifications = $this->fetcher->fetch($apiToken);
 
-        $repoNotif = array_filter($notifications, function($notification) use ($repository) {
-            return $repository === $notification->getRepositoryFullName();
-        });
-
-        $output->writeln(sprintf('%d/%d', count($repoNotif), count($notifications)));
+        if (null === $notifications) {
+            return;
+        }
 
         if (count($notifications)) {
             $body = '';
