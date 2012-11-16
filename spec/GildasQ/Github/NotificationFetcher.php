@@ -63,18 +63,12 @@ class NotificationFetcher extends ObjectBehavior
 ]
 JSON;
 
-        $response->isOk()->willReturn(true);
+        $response->getStatusCode()->willReturn(200);
         $response->getContent()->willReturn($json);
         $notifications = [$notification1, $notification2];
         $notificationFactory->createNotifications(ANY_ARGUMENTS)->willReturn($notifications);
 
         $this->fetch('1234')->shouldReturn($notifications);
-    }
-
-    function it_should_not_query_if_no_new_notification($response)
-    {
-        $response->isOk()->willReturn(false);
-        $this->fetch('1234')->shouldReturn(null);
     }
 
     /**
@@ -118,7 +112,7 @@ JSON;
 ]
 JSON;
         $response->getContent()->willReturn($json);
-        $response->isOk()->willReturn(true);
+        $response->getStatusCode()->willReturn(200);
         $notifications = [$notification1, $notification2];
         $notificationFactory->createNotifications(ANY_ARGUMENTS)->willReturn($notifications);
         $persister->save($notifications)->shouldBeCalled();
@@ -128,7 +122,7 @@ JSON;
 
     function it_should_not_persist_notifications_if_no_new_notification($response, $persister)
     {
-        $response->isOk()->willReturn(false);
+        $response->getStatusCode()->willReturn(304);
         $persister->save(ANY_ARGUMENTS)->shouldNotBeCalled();
 
         $this->fetch('some token');
@@ -136,7 +130,7 @@ JSON;
 
     function it_should_read_cached_notifications_if_no_new_notification($response, $persister)
     {
-        $response->isOk()->willReturn(false);
+        $response->getStatusCode()->willReturn(304);
         $persister->retrieve()->shouldBeCalled();
 
         $this->fetch('some token');
