@@ -15,7 +15,6 @@ class NotificationFetcher
     private $requestFactory;
     private $responseFactory;
     private $notificationFactory;
-    private $lastModifiedFilePath = '/tmp/github-last-modified-notification';
 
     public function __construct(
         ClientInterface $client = null,
@@ -25,11 +24,11 @@ class NotificationFetcher
         PersisterInterface $persister = null
     )
     {
-        $this->client              = $client?: new Curl;
-        $this->requestFactory      = $requestFactory?: new RequestFactory;
-        $this->responseFactory     = $responseFactory?: new ResponseFactory;
-        $this->notificationFactory = $notificationFactory?: new NotificationFactory;
-        $this->persister           = $persister?: new FileSystemPersister;
+        $this->client              = $client ?: new Curl;
+        $this->requestFactory      = $requestFactory ?: new RequestFactory;
+        $this->responseFactory     = $responseFactory ?: new ResponseFactory;
+        $this->notificationFactory = $notificationFactory ?: new NotificationFactory;
+        $this->persister           = $persister ?: new FileSystemPersister;
     }
 
     public function setPersister(PersisterInterface $persister)
@@ -43,41 +42,26 @@ class NotificationFetcher
             throw new \RuntimeException('Please provide a valid api token. See http://developer.github.com/v3/oauth');
         }
 
-        $request  = $this->requestFactory->createRequest($apiToken, $this->getLastModified());
+        $request  = $this->requestFactory->createRequest($apiToken, $this->persister->getLastModified());
         $response = $this->responseFactory->createResponse();
         $this->client->send($request, $response);
 
-        if ($response->isOk()) {
-            if ($date = $response->getHeader('Last-Modified')) {
-                $this->setLastModified($date);
-            } else {
-                $this->setLastModified($response->getHeader('Date'));
-            }
-
-            if (null !== $data = json_decode($response->getContent(), true)) {
-                $notifications = $this->notificationFactory->createNotifications($data);
-                $this->persister->save($notifications);
-
-                return $notifications;
-            } else {
-                throw new \RuntimeException('Error while parsing json response.');
-            }
+        if ($this->isNotModified($response)) {
+            return $this->persister->retrieve();
         }
 
-        return $this->persister->retrieve();
-    }
+        if (null !== $data = json_decode($response->getContent(), true)) {
+            $notifications = $this->notificationFactory->createNotifications($data);
+            $this->persister->save($notifications);
 
-    private function getLastModified()
-    {
-        if (is_file($this->lastModifiedFilePath)) {
-            return file_get_contents($this->lastModifiedFilePath);
+            return $notifications;
+        } else {
+            throw new \RuntimeException('Error while parsing json response.');
         }
-
-        return null;
     }
 
-    private function setLastModified($lastModified)
+    private function isNotModified(Response $response)
     {
-        return file_put_contents($this->lastModifiedFilePath, $lastModified);
+        return 304 === $response->getStatusCode();
     }
 }
