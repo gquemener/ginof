@@ -1,6 +1,6 @@
 <?php
 
-namespace GildasQ\Persistence;
+namespace GiNof\Persistence;
 
 class FileSystemPersister implements PersisterInterface
 {

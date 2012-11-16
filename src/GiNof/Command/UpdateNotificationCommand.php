@@ -1,18 +1,18 @@
 <?php
 
-namespace GildasQ\Command;
+namespace GiNof\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-use GildasQ\Github\NotificationFetcher;
-use GildasQ\Github\Router;
-use GildasQ\Persistence\PersisterInterface;
-use GildasQ\Persistence\FileSystemPersister;
-use GildasQ\System\NotifierInterface;
-use GildasQ\System\GnomeNotifier;
+use GiNof\Github\NotificationFetcher;
+use GiNof\Github\Router;
+use GiNof\Persistence\PersisterInterface;
+use GiNof\Persistence\FileSystemPersister;
+use GiNof\System\NotifierInterface;
+use GiNof\System\GnomeNotifier;
 
 /**
  * Provide command to fetch and display notification
