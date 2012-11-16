@@ -1,13 +1,13 @@
 <?php
 
-namespace GildasQ\Github;
+namespace GiNof\Github;
 
 use Buzz\Client\Curl;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
 use Buzz\Client\ClientInterface;
-use GildasQ\Persistence\FileSystemPersister;
-use GildasQ\Persistence\PersisterInterface;
+use GiNof\Persistence\FileSystemPersister;
+use GiNof\Persistence\PersisterInterface;
 
 class NotificationFetcher
 {

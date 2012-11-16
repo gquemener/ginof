@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\GildasQ\Github;
+namespace spec\GiNof\Github;
 
 use PHPSpec2\ObjectBehavior;
 

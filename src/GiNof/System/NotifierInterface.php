@@ -1,6 +1,6 @@
 <?php
 
-namespace GildasQ\System;
+namespace GiNof\System;
 
 interface NotifierInterface
 {

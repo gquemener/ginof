@@ -13,7 +13,7 @@ if (is_dir($vendor = __DIR__ . '/../vendor')) {
     );
 }
 
-$app       = new Symfony\Component\Console\Application();
+$app = new Symfony\Component\Console\Application();
 
-$app->add(new GildasQ\Command\UpdateNotificationCommand());
+$app->add(new GiNof\Command\UpdateNotificationCommand());
 $app->run();

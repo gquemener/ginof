@@ -1,16 +1,16 @@
 <?php
 
-namespace spec\GildasQ\Github;
+namespace spec\GiNof\Github;
 
 use PHPSpec2\ObjectBehavior;
 
 class NotificationFetcher extends ObjectBehavior
 {
     /**
-     * @param GildasQ\Github\RequestFactory $requestFactory
-     * @param GildasQ\Github\ResponseFactory $responseFactory
-     * @param GildasQ\Github\NotificationFactory $notificationFactory
-     * @param GildasQ\Persistence\PersisterInterface $persister
+     * @param GiNof\Github\RequestFactory $requestFactory
+     * @param GiNof\Github\ResponseFactory $responseFactory
+     * @param GiNof\Github\NotificationFactory $notificationFactory
+     * @param GiNof\Persistence\PersisterInterface $persister
      * @param Buzz\Client\ClientInterface $client
      * @param Buzz\Message\Request $request
      * @param Buzz\Message\Response $response

@@ -1,6 +1,6 @@
 <?php
 
-namespace GildasQ\Github;
+namespace GiNof\Github;
 
 class NotificationFactory
 {

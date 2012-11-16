@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\GildasQ\System;
+namespace spec\GiNof\System;
 
 use PHPSpec2\ObjectBehavior;
 
@@ -16,7 +16,7 @@ class GnomeNotifier extends ObjectBehavior
 
     function it_should_be_initializable()
     {
-        $this->shouldHaveType('GildasQ\System\NotifierInterface');
+        $this->shouldHaveType('GiNof\System\NotifierInterface');
     }
 
     /**

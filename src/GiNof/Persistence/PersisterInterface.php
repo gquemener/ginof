@@ -1,6 +1,6 @@
 <?php
 
-namespace GildasQ\Persistence;
+namespace GiNof\Persistence;
 
 /**
  * Provides a mean to persist and retrieve data
