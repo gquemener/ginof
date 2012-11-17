@@ -8,8 +8,7 @@ class NotificationFactory
     {
         $notifications = [];
         foreach ($data as $value) {
-            $notification = $this->createNotification($value);
-            $notifications[] = $notification;
+            $notifications[] = $this->createNotification($value);
         }
 
         return $notifications;

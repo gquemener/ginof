@@ -36,13 +36,13 @@ class NotificationFetcher
         $this->persister = $persister;
     }
 
-    public function fetch($apiToken = null)
+    public function fetch($apiToken = null, $force = false)
     {
         if (!$apiToken) {
             throw new \RuntimeException('Please provide a valid api token. See http://developer.github.com/v3/oauth');
         }
 
-        $request  = $this->requestFactory->createRequest($apiToken, $this->persister->getLastModified());
+        $request  = $this->requestFactory->createRequest($apiToken, $this->persister->getLastModified(), $force);
         $response = $this->responseFactory->createResponse();
         $this->client->send($request, $response);
 

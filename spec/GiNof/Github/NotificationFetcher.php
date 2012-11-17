@@ -128,11 +128,10 @@ JSON;
         $this->fetch('some token');
     }
 
-    function it_should_read_cached_notifications_if_no_new_notification($response, $persister)
+    function it_should_return_null_if_no_new_notifications($response, $persister)
     {
         $response->getStatusCode()->willReturn(304);
-        $persister->retrieve()->shouldBeCalled();
 
-        $this->fetch('some token');
+        $this->fetch('some token')->shouldReturn(null);
     }
 }

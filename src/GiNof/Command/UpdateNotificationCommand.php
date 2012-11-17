@@ -13,6 +13,7 @@ use GiNof\Persistence\PersisterInterface;
 use GiNof\Persistence\FileSystemPersister;
 use GiNof\System\NotifierInterface;
 use GiNof\System\GnomeNotifier;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Provide command to fetch and display notification
@@ -57,13 +58,16 @@ class UpdateNotificationCommand extends Command
             ->addArgument(
                 'persist-at',
                 InputArgument::OPTIONAL,
-                'Path to save number of notifications'
+                'Where to store notifications cache',
+                '/tmp/github-notifications'
             )
-            ->addArgument(
-                'repository',
-                InputArgument::OPTIONAL,
-                'Repository in which you want to retrieve notifications'
-            );
+            ->addOption(
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Wether or not to bypass the cache and force fetching the notifiations'
+            )
+        ;
     }
 
     /**
@@ -73,12 +77,11 @@ class UpdateNotificationCommand extends Command
     {
         $apiToken      = $input->getArgument('api-token');
         $persistAt     = $input->getArgument('persist-at');
-        $repository    = $input->getArgument('repository');
 
         $this->persister->setPath($persistAt);
         $this->fetcher->setPersister($this->persister);
 
-        $notifications = $this->fetcher->fetch($apiToken);
+        $notifications = $this->fetcher->fetch($apiToken, $input->getOption('force'));
 
         if (null === $notifications) {
             return;
