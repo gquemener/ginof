@@ -2,6 +2,10 @@ language: php
 
 php: 5.4
 
-before_script: composer install --dev
+before_script:
+    - apt-get install pear php5-dev libdbus-1-dev libxml2-dev
+    - pear config-set auto_discover 1
+    - pecl install channel://pecl.php.net/dbus-0.1.1
+    - composer install --dev
 
 script: ./bin/phpspec run -fpretty
