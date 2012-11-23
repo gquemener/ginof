@@ -17,6 +17,9 @@ class Router
             case 'Issue':
                 return $this->createIssueUrl($subjectUrl, $subjectType);
 
+            case 'Commit':
+                return $this->createCommitUrl($subjectUrl, $subjectType);
+
             default:
                 throw new \RuntimeException(sprintf('Cannot generate github url from subject url "%s" and type "%s"', $subjectUrl, $subjectType));
         }
@@ -34,6 +37,13 @@ class Router
         $matches = $this->getMatches('#https?://api.github.com/repos/(.*)/(.*)/issues/(\d+)#', $subjectUrl);
 
         return sprintf('https://www.github.com/%s/%s/issues/%d', $matches[1], $matches[2], $matches[3]);
+    }
+
+    private function createCommitUrl($subjectUrl, $subjectType)
+    {
+        $matches = $this->getMatches('#https?://api.github.com/repos/(.*)/(.*)/commits/(\w+)#', $subjectUrl);
+
+        return sprintf('https://www.github.com/%s/%s/commit/%s', $matches[1], $matches[2], $matches[3]);
     }
 
     private function getMatches($urlPattern, $subjectUrl)

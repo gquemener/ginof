@@ -22,6 +22,14 @@ class Router extends ObjectBehavior
         ;
     }
 
+    function it_should_generate_url_for_commit()
+    {
+        $this
+            ->generateUrl('https://api.github.com/repos/symfony/symfony/commits/b3c3e89462d058afc35c59cdd71a4b6c4b6cdbcc','Commit')
+            ->shouldReturn('https://www.github.com/symfony/symfony/commit/b3c3e89462d058afc35c59cdd71a4b6c4b6cdbcc')
+        ;
+    }
+
     function its_generateUrl_should_throw_exception_if_subject_url_is_invalid()
     {
         $this->shouldThrow('RuntimeException')->duringGenerateUrl('http://www.google.com', 'PullRequest');
