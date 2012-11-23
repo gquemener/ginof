@@ -18,16 +18,19 @@ class ShowNotificationCommand extends Command
 {
     private $persister;
     private $notifier;
+    private $config;
 
     /**
      * @param PersisterInterface  $persister The engine to persist notifications
      * @param Router              $router    The Github router
      */
     public function __construct(
+        array $config = array(),
         PersisterInterface $persister = null,
         Router $router = null
     )
     {
+        $this->config    = $config;
         $this->persister = $persister ?: new FileSystemPersister;
         $this->router    = $router    ?: new Router;
 
@@ -39,12 +42,6 @@ class ShowNotificationCommand extends Command
         $this
             ->setName('show')
             ->setDescription('Show cached notifications')
-            ->addArgument(
-                'persist-at',
-                InputArgument::OPTIONAL,
-                'Where to read notifications cache from',
-                '/tmp/github-notifications'
-            )
         ;
     }
 
@@ -53,7 +50,7 @@ class ShowNotificationCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $persistAt = $input->getArgument('persist-at');
+        $persistAt = $this->config['parameters']['cache_path'];
 
         $this->persister->setPath($persistAt);
         $notifications = $this->persister->retrieve();

@@ -1,0 +1,3 @@
+parameters:
+    api_token: #Your api token
+    cache_path: /tmp/github-notifications

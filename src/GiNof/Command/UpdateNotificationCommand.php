@@ -20,9 +20,11 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class UpdateNotificationCommand extends Command
 {
+    private $config;
     private $persister;
     private $fetcher;
     private $notifier;
+    private $router;
 
     /**
      * @param PersisterInterface  $persister The engine to persist notifications
@@ -31,12 +33,14 @@ class UpdateNotificationCommand extends Command
      * @param Router              $router    The Github router
      */
     public function __construct(
+        array $config = array(),
         PersisterInterface $persister = null,
         NotificationFetcher $fetcher = null,
         NotifierInterface $notifier = null,
         Router $router = null
     )
     {
+        $this->config    = $config;
         $this->persister = $persister ?: new FileSystemPersister;
         $this->fetcher   = $fetcher   ?: new NotificationFetcher;
         $this->notifier  = $notifier  ?: new GnomeNotifier;
@@ -50,17 +54,6 @@ class UpdateNotificationCommand extends Command
         $this
             ->setName('fetch')
             ->setDescription('Try to fetch new notification from Github')
-            ->addArgument(
-                'api-token',
-                InputArgument::REQUIRED,
-                'Your Github API access token'
-            )
-            ->addArgument(
-                'persist-at',
-                InputArgument::OPTIONAL,
-                'Where to store notifications cache',
-                '/tmp/github-notifications'
-            )
             ->addOption(
                 'force',
                 null,
@@ -75,8 +68,8 @@ class UpdateNotificationCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $apiToken      = $input->getArgument('api-token');
-        $persistAt     = $input->getArgument('persist-at');
+        $apiToken      = $this->config['parameters']['api_token'];
+        $persistAt     = $this->config['parameters']['cache_path'];
 
         $this->persister->setPath($persistAt);
         $this->fetcher->setPersister($this->persister);

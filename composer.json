@@ -5,6 +5,8 @@
         "ext-curl": "*",
         "ext-dbus": "*",
         "symfony/console": "2.1.x-dev",
+        "symfony/config": "2.1.x-dev",
+        "symfony/yaml": "2.1.x-dev",
         "kriswallsmith/buzz": ">=0.7"
     },
     "require-dev": {
@@ -17,5 +19,6 @@
         "psr-0": {
             "": "src/"
         }
-    }
+    },
+    "bin": ["bin/ginof"]
 }

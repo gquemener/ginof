@@ -14,14 +14,16 @@ use GiNof\Github\NotificationReader;
  */
 class ReadNotificationCommand extends Command
 {
-    private $fetcher;
+    private $reader;
+    private $config;
 
     /**
-     * @param NotificationRead $fetcher   The notification reader
+     * @param NotificationRead $reader   The notification reader
      */
-    public function __construct(NotificationReader $fetcher = null)
+    public function __construct(array $config = array(), NotificationReader $reader = null)
     {
-        $this->reader   = $fetcher   ?: new NotificationReader;
+        $this->reader = $reader ?: new NotificationReader;
+        $this->config = $config;
 
         parent::__construct();
     }
@@ -31,11 +33,6 @@ class ReadNotificationCommand extends Command
         $this
             ->setName('read')
             ->setDescription('Mark all notifications as read')
-            ->addArgument(
-                'api-token',
-                InputArgument::REQUIRED,
-                'Your Github API access token'
-            )
         ;
     }
 
@@ -44,7 +41,9 @@ class ReadNotificationCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->reader->read($input->getArgument('api-token'))) {
+        $apiToken = $this->config['parameters']['api_token'];
+
+        if ($this->reader->read($apiToken)) {
             $output->writeln('<info>✔ All notifications were marked as read</info>');
         } else {
             $output->writeln('<comment>✘ Coulnd\'t mark notifications as read</comment>');
